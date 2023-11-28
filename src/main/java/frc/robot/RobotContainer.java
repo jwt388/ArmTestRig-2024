@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ArmDPadUpCommand;
 import frc.robot.commands.ArmScoreHighCommand;
+import frc.robot.simulation.ArmSimulation;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.Constants.ArmConstants;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,10 +27,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final ArmSubsystem m_robotArm = new ArmSubsystem();
+  private final ArmSubsystem robotArm = new ArmSubsystem();
+
+  // Simulations
+  private final ArmSimulation armSim = new ArmSimulation(robotArm);
 
   // The driver's controller
-  CommandXboxController m_driverController =
+  CommandXboxController driverController =
       new CommandXboxController(OIConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -37,7 +41,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     
-    SmartDashboard.putData(m_robotArm);
+    SmartDashboard.putData(robotArm);
 
   }
 
@@ -49,64 +53,64 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Move the arm to low position when the 'A' button is pressed.
-    m_driverController
+    driverController
         .a()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_robotArm.setGoal(Constants.ArmConstants.kArmLowPositionRad);
-                  m_robotArm.enable();
+                  robotArm.setGoal(Constants.ArmConstants.kArmLowPositionRad);
+                  robotArm.enable();
                 },
-                m_robotArm));
+                robotArm));
 
     // Move the arm to high position when the 'B' button is pressed.
-    m_driverController
+    driverController
         .b()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_robotArm.setGoal(Constants.ArmConstants.kArmHighPositionRad);
-                  m_robotArm.enable();
+                  robotArm.setGoal(Constants.ArmConstants.kArmHighPositionRad);
+                  robotArm.enable();
                 },
-                m_robotArm));
+                robotArm));
 
     // Move the arm to neutral (starting) position when the 'y' button is pressed.
-    m_driverController
+    driverController
         .y()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_robotArm.setGoal(ArmConstants.kArmOffsetRads);
-                  m_robotArm.enable();
+                  robotArm.setGoal(ArmConstants.kArmOffsetRads);
+                  robotArm.enable();
                 },
-                m_robotArm));
+                robotArm));
 
     // Shift position down a small amount when the POV Down is pressed.
-    m_driverController
+    driverController
         .povDown()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_robotArm.setGoal(m_robotArm.decreasedGoal());
-                  m_robotArm.enable();
+                  robotArm.setGoal(robotArm.decreasedGoal());
+                  robotArm.enable();
                 },
-                m_robotArm));
+                robotArm));
                 
      // Alternate way to trigger score high position via a command
-     m_driverController
+     driverController
      .back()
-     .onTrue(new ArmScoreHighCommand(m_robotArm));
+     .onTrue(new ArmScoreHighCommand(robotArm));
 
     // Shift position up a small amount when the POV Down is pressed.
-    m_driverController
+    driverController
         .povUp()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_robotArm.setGoal(m_robotArm.increasedGoal());
-                  m_robotArm.enable();
+                  robotArm.setGoal(robotArm.increasedGoal());
+                  robotArm.enable();
                 },
-                m_robotArm));
+                robotArm));
 
 
     // Reset the encoders to zero when the 'X' button is pressed. 
@@ -114,13 +118,7 @@ public class RobotContainer {
     // m_driverController.x().onTrue(Commands.runOnce(m_robotArm::resetPosition));
 
     // Disable the arm controller when X is pressed.
-    m_driverController.x().onTrue(Commands.runOnce(m_robotArm::disable));
-
-    // Extend the arm controller when right bumper is pressed.
-    m_driverController.rightBumper().onTrue(Commands.runOnce(m_robotArm::extendArm));
-
-    // Retract the arm controller when left bumper is pressed.
-    m_driverController.leftBumper().onTrue(Commands.runOnce(m_robotArm::retractArm));
+    driverController.x().onTrue(Commands.runOnce(robotArm::disable));
 
   }
 
@@ -129,7 +127,7 @@ public class RobotContainer {
    * disable to prevent integral windup.
    */
   public void disablePIDSubsystems() {
-    m_robotArm.disable();
+    robotArm.disable();
     DataLogManager.log("disablePIDSubsystems");
 
   }
