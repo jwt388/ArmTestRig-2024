@@ -2,14 +2,11 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.simulation;
+package frc.sim;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import frc.robot.Constants;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.subsystems.ArmSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -20,6 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+
+import frc.robot.Constants.ArmConstants;
+import frc.robot.subsystems.ArmSubsystem;
+
+import frc.sim.Constants.ArmSim;
 
 /** A robot arm simulation based on a linear system model with Mech2d display. */
 public class ArmSimulation extends SubsystemBase implements AutoCloseable {
@@ -36,14 +38,14 @@ public class ArmSimulation extends SubsystemBase implements AutoCloseable {
   private final SingleJointedArmSim armSim =
       new SingleJointedArmSim(
           armGearbox,
-          Constants.ArmSimConstants.ARM_REDUCTION,
-          SingleJointedArmSim.estimateMOI(Constants.ArmSimConstants.ARM_LENGTH_METERS, Constants.ArmSimConstants.ARM_MASS_KG),
-          Constants.ArmSimConstants.ARM_LENGTH_METERS,
+          ArmSim.ARM_REDUCTION,
+          SingleJointedArmSim.estimateMOI(ArmSim.ARM_LENGTH_METERS, ArmSim.ARM_MASS_KG),
+          ArmSim.ARM_LENGTH_METERS,
           ArmConstants.MIN_ANGLE_RADS,
           ArmConstants.MAX_ANGLE_RADS,
           true,
-          Constants.ArmSimConstants.START_ANGLE_RADS,
-          VecBuilder.fill(Constants.ArmSimConstants.ENCODER_DISTANCE_PER_PULSE) // Add noise with a std-dev of 1 tick
+          ArmSim.START_ANGLE_RADS,
+          VecBuilder.fill(ArmSim.ENCODER_DISTANCE_PER_PULSE) // Add noise with a std-dev of 1 tick
           );
 
   private double encoderSimDistance;
@@ -57,7 +59,7 @@ public class ArmSimulation extends SubsystemBase implements AutoCloseable {
       mechArmPivot.append(
           new MechanismLigament2d(
               "Arm",
-              Constants.ArmSimConstants.ARM_LENGTH_INCHES,
+              ArmSim.ARM_LENGTH_INCHES,
               Units.radiansToDegrees(armSim.getAngleRads()),
               6,
               new Color8Bit(Color.kYellow)));
@@ -84,8 +86,7 @@ public class ArmSimulation extends SubsystemBase implements AutoCloseable {
   }
 
   /** Update the simulation model. */
-  @Override
-  public void simulationPeriodic() {
+  public void updateSim() {
     // In this method, we update our simulation of what our arm is doing
     // First, we set our "inputs" (voltages)
     armSim.setInput(armSubsystem.getVoltageCommand());
@@ -118,7 +119,7 @@ public class ArmSimulation extends SubsystemBase implements AutoCloseable {
   
   public void updateShuffleboard() {
 
-    SmartDashboard.putNumber("Arm Mechanical Angle", Units.radiansToDegrees(armSim.getAngleRads())); //sim
+    SmartDashboard.putNumber("Arm Sim Angle", Units.radiansToDegrees(armSim.getAngleRads())); //sim
 
   }
 
@@ -129,4 +130,5 @@ public class ArmSimulation extends SubsystemBase implements AutoCloseable {
     mechArm.close();
   }
 }
+
 

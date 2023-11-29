@@ -155,9 +155,14 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements AutoCloseable 
   }
 
   // Reset the encoder to zero. Should only be used when arm is in neutral offset position.
+  // Function only allowed when arm is disabled
   public void resetPosition() {
-    // Arm position for PID measurement
-      encoder.setPosition(0) ;
+
+    if (m_enabled) {
+      DataLogManager.log("Warning: Arm is enabled - encoder position not reset.");
+    } else {
+      encoder.setPosition(0);
+    }
   }
 
    // Calculate increased  goal limited to allowed range
@@ -206,11 +211,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements AutoCloseable 
   }
 
   /** Shuffleboard settings that only need to done during initialization */
-  private void setupShuffleboard() {
-
-    SmartDashboard.putData(m_controller);
-
-  }
+  private void setupShuffleboard() {}
 
   /** Update Shuffleboard values (call periodically) */
   public void updateShuffleboard() {

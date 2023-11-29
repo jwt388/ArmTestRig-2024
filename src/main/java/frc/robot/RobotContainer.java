@@ -4,18 +4,18 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
-import frc.robot.simulation.ArmSimulation;
+import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,30 +24,31 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
+  // The robot's subsystems and commands are defined here...
+  private final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+
+  private final ExampleCommand autoCommand =
+      new ExampleCommand("ExampleCommand", this.exampleSubsystem);
+  private PowerDistribution pdp = new PowerDistribution();
   private final ArmSubsystem robotArm = new ArmSubsystem();
 
-  // Simulations
-  private final ArmSimulation armSim = new ArmSimulation(robotArm);
-
   // The driver's controller
-  CommandXboxController driverController =
+  private CommandXboxController driverController =
       new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     // Configure the button bindings
     configureButtonBindings();
     
-    SmartDashboard.putData(robotArm);
-
   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its subclasses ({@link
+   * instantiating a {@link GenericHID} or one of its subclasses ({@link
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * JoystickButton}.
+   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
     // Move the arm to neutral (starting) position when the 'A' button is pressed.
@@ -120,6 +121,26 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Commands.none();
+    // An ExampleCommand will run in autonomous
+    return this.autoCommand;
   }
+
+  /**
+   * Use this to get the PDP for data logging.
+   *
+   * @return The PowerDistribution module.
+   */
+  public PowerDistribution getPdp() {
+    return this.pdp;
+  }
+
+  /**
+   * Use this to get the Arm Subsystem
+   *
+   * @return the command to run in autonomous
+   */
+  public ArmSubsystem getArmSubsystem() {
+    return robotArm;
+  }
+
 }

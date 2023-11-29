@@ -15,8 +15,48 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  
+
+  private Constants() {
+    throw new IllegalStateException("Utility class");
+  }
+
+  // Joystick Axes
+  public static final int LEFT_X = 0;
+  public static final int LEFT_Y = 1;
+  public static final int LEFT_TRIGGER = 2;
+  public static final int RIGHT_TRIGGER = 3;
+  public static final int RIGHT_X = 4;
+  public static final int RIGHT_Y = 5;
+
+  // Joystick Buttons
+  public static final int JS_A = 1;
+  public static final int JS_B = 2;
+  public static final int JS_X = 3;
+  public static final int JS_Y = 4;
+  public static final int JS_LB = 5;
+  public static final int JS_RB = 6;
+  public static final int JS_BACK = 7;
+  public static final int JS_START = 8;
+  public static final int JS_L_STICK = 9;
+  public static final int JS_R_STICK = 10;
+
+  // Run time options
+
+  // Set to true to log Joystick data. To false otherwise.
+  public static final boolean LOG_JOYSTICK_DATA = true;
+
+  // Set to true to send telemetry data to Live Window. To false
+  // to disable it.
+  public static final boolean LW_TELEMETRY_ENABLE = false;
+
+  // Set to true to log loop timing data. To false to disable.
+  public static final boolean LOOP_TIMING_LOG = true;
   public static final class ArmConstants {
+
+    private ArmConstants() {
+      throw new IllegalStateException("ArmConstants Utility Class");
+    }
+
     public static final int MOTOR_PORT = 4;
 
     // These are fake gains; in actuality these must be determined individually for each robot
@@ -49,16 +89,11 @@ public final class Constants {
     public static final double POS_INCREMENT = Units.degreesToRadians(2); // For small adjustments
   }
   public static final class OIConstants {
+
+    private OIConstants() {
+      throw new IllegalStateException("OIConstants Utility Class");
+    }
     public static final int DRIVER_CONTROLLER_PORT = 0;
-  }
-  public static final class ArmSimConstants {
-    public static final double ARM_REDUCTION = 1/ArmConstants.GEAR_RATIO;
-    public static final double ARM_MASS_KG = 8.0;
-    public static final double ARM_LENGTH_INCHES = 30;
-    public static final double ARM_LENGTH_METERS = Units.inchesToMeters(ARM_LENGTH_INCHES);
-    public static final double START_ANGLE_RADS = ArmConstants.MIN_ANGLE_RADS;
-    public static final int ENCODER_PRR = 4096; // Only used to simulate noise in position measurement
-    public static final double ENCODER_DISTANCE_PER_PULSE = 2.0 * Math.PI / ENCODER_PRR * ArmConstants.GEAR_RATIO;
   }
 
 }

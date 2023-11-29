@@ -12,6 +12,8 @@
     },
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Commands/ExampleSubsystem/ExampleCommand": "Command",
+      "/Shuffleboard/Driver/Field": "Field2d",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
       "/SmartDashboard/ArmSubsystem": "Subsystem"
     },
