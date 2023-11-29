@@ -170,4 +170,9 @@ out/
 .fleet
 
 # Simulation GUI and other tools window save file
+simgui*.json
 *-window.json
+
+# Network tables for saved preferences
+networktables.json
+networktables.json.bck

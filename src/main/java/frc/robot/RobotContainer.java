@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ArmDPadUpCommand;
-import frc.robot.commands.ArmScoreHighCommand;
 import frc.robot.simulation.ArmSimulation;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.Constants.ArmConstants;
@@ -34,7 +32,7 @@ public class RobotContainer {
 
   // The driver's controller
   CommandXboxController driverController =
-      new CommandXboxController(OIConstants.kDriverControllerPort);
+      new CommandXboxController(OIConstants.DRIVER_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -52,35 +50,24 @@ public class RobotContainer {
    * JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Move the arm to low position when the 'A' button is pressed.
+    // Move the arm to neutral (starting) position when the 'A' button is pressed.
     driverController
         .a()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  robotArm.setGoal(Constants.ArmConstants.kArmLowPositionRad);
+                  robotArm.setGoal(Constants.ArmConstants.ARM_OFFSET_RADS);
                   robotArm.enable();
                 },
                 robotArm));
 
-    // Move the arm to high position when the 'B' button is pressed.
+    // Move the arm to the goal position when the 'B' button is pressed.
     driverController
         .b()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  robotArm.setGoal(Constants.ArmConstants.kArmHighPositionRad);
-                  robotArm.enable();
-                },
-                robotArm));
-
-    // Move the arm to neutral (starting) position when the 'y' button is pressed.
-    driverController
-        .y()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  robotArm.setGoal(ArmConstants.kArmOffsetRads);
+                  robotArm.setGoal(Constants.ArmConstants.ARM_GOAL_POSITION);
                   robotArm.enable();
                 },
                 robotArm));
@@ -96,11 +83,6 @@ public class RobotContainer {
                 },
                 robotArm));
                 
-     // Alternate way to trigger score high position via a command
-     driverController
-     .back()
-     .onTrue(new ArmScoreHighCommand(robotArm));
-
     // Shift position up a small amount when the POV Down is pressed.
     driverController
         .povUp()
@@ -113,11 +95,11 @@ public class RobotContainer {
                 robotArm));
 
 
-    // Reset the encoders to zero when the 'X' button is pressed. 
-    //   Should only be used when arm is in neutral position.
-    // m_driverController.x().onTrue(Commands.runOnce(m_robotArm::resetPosition));
+    /* Reset the encoders to zero when the 'Y' button is pressed. 
+      Should only be used when arm is in neutral (starting) position. */
+    driverController.y().onTrue(Commands.runOnce(robotArm::resetPosition));
 
-    // Disable the arm controller when X is pressed.
+    // Disable the arm controller when the 'X' button is pressed.
     driverController.x().onTrue(Commands.runOnce(robotArm::disable));
 
   }
