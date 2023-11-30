@@ -24,7 +24,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.sim.Constants.ArmSim;
 
 /** A robot arm simulation based on a linear system model with Mech2d display. */
-public class ArmSimulation extends SubsystemBase implements AutoCloseable {
+public class Arm extends SubsystemBase implements AutoCloseable {
    
   private final ArmSubsystem armSubsystem;
   private double lastPosition = 0.0;
@@ -66,7 +66,7 @@ public class ArmSimulation extends SubsystemBase implements AutoCloseable {
 
   
   /** Create a new ArmSubsystem. */
-  public ArmSimulation(ArmSubsystem simulationArmSubsystem) {
+  public Arm(ArmSubsystem simulationArmSubsystem) {
 
     armSubsystem = simulationArmSubsystem;
     simulationInit();
